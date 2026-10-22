@@ -142,6 +142,15 @@ def main():
         print("Sin lectura nueva. Detalle:\n" + "\n".join(errores), file=sys.stderr)
         return 0  # el cartel de la página avisa; no hace fallar el flujo
 
+    # verificación de plausibilidad: un río grande no sube ni baja más de 1 m por día
+    dias = (datetime.strptime(hallazgo["fecha"], "%Y-%m-%d") - datetime.strptime(d["lectura"]["fecha"], "%Y-%m-%d")).days
+    if dias >= 1 and abs(hallazgo["altura"] - d["lectura"]["altura_m"]) > 1.0 * dias:
+        d["estado"] = "error"
+        d["mensaje"] = f"lectura con salto inusual ({hallazgo['altura']} m el {hallazgo['fecha']}); se conserva la anterior"
+        ARCHIVO.write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print("Salto inusual; se conserva la lectura anterior:", d["mensaje"], file=sys.stderr)
+        return 0
+
     # no retroceder: nunca reemplazar por una lectura de fecha anterior
     if hallazgo["fecha"] < d["lectura"]["fecha"]:
         d["estado"] = "ok"
