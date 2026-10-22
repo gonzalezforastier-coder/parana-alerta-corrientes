@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#062d32">
+  <title>Paraná Alerta Corrientes</title>
+  <meta name="description" content="Altura del Paraná, tendencia, alertas y datos públicos para Corrientes Capital.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="simulator.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Inicio"><span class="brand-mark">PA</span><span>Paraná Alerta <b>Corrientes</b></span></a>
+    <span class="badge">PROTOTIPO CIUDADANO</span>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">RÍO PARANÁ · PUERTO CORRIENTES</p>
+        <h1>El río, explicado<br>antes de que sea tarde.</h1>
+        <p class="lead">Datos oficiales, fuentes visibles y una señal clara cuando la información local todavía no fue publicada.</p>
+      </div>
+      <div class="river-card" aria-live="polite">
+        <div class="river-card-head"><span>Última altura verificada</span><span class="status-dot"></span></div>
+        <div class="height"><strong id="height">7,36</strong><span>m</span></div>
+        <p id="measurement-time">INA · 21 de octubre de 2026</p>
+        <div class="level level-evac"><span>EVACUACIÓN</span><b>+0,36 m sobre el umbral</b></div>
+        <div class="thresholds" aria-label="Umbrales oficiales">
+          <div><span>Alerta</span><b>6,50 m</b></div>
+          <div><span>Evacuación</span><b>7,00 m</b></div>
+        </div>
+        <button id="refresh" class="refresh">Comprobar fuente oficial</button>
+        <p id="refresh-note" class="micro">La fecha se muestra siempre. Nunca reemplazamos un dato faltante por una estimación.</p>
+      </div>
+    </section>
+
+    <section class="signal-grid">
+      <article class="signal danger">
+        <span class="signal-icon">↑</span><div><p>SITUACIÓN</p><h2>Sobre evacuación</h2><span>El nivel verificado supera los 7,00 m.</span></div>
+      </article>
+      <article class="signal">
+        <span class="signal-icon">↗</span><div><p>TENDENCIA OFICIAL</p><h2>Aguas altas</h2><span>El INA informó oscilación y posible permanencia sobre alerta.</span></div>
+      </article>
+      <article class="signal unknown">
+        <span class="signal-icon">?</span><div><p>BOMBAS Y COMPUERTAS</p><h2>Sin dato público</h2><span>No encontramos telemetría municipal abierta en tiempo real.</span></div>
+      </article>
+    </section>
+
+    <section class="section simulator">
+      <div class="sim-copy">
+        <p class="eyebrow">SIMULADOR</p>
+        <h2>¿Qué cambia si el río sigue subiendo?</h2>
+        <p class="section-intro">Mové la barra para comparar una altura hipotética con los umbrales oficiales. Es una herramienta educativa: no pronostica ni reemplaza una orden de evacuación.</p>
+        <div class="range-label"><span>Altura simulada</span><strong><span id="sim-value">7,36</span> m</strong></div>
+        <input id="sim-range" type="range" min="4" max="9.5" step="0.01" value="7.36" aria-label="Altura simulada del río Paraná">
+        <div class="range-scale"><span>4,00</span><span>Alerta 6,50</span><span>Evac. 7,00</span><span>9,50</span></div>
+      </div>
+      <div class="gauge-card">
+        <div class="gauge" aria-hidden="true"><div id="gauge-fill" class="gauge-fill"></div><div class="mark alert-mark"><span>6,50</span></div><div class="mark evac-mark"><span>7,00</span></div></div>
+        <div class="scenario"><span id="sim-tag" class="scenario-tag">EVACUACIÓN</span><h3 id="sim-title">Supera el nivel de evacuación</h3><p id="sim-text">Las zonas ribereñas requieren seguimiento directo de Defensa Civil y confirmación de los centros habilitados.</p></div>
+      </div>
+    </section>
+
+    <section class="section two-col">
+      <div>
+        <p class="eyebrow">LECTURA RÁPIDA</p>
+        <h2>Qué sabemos y qué falta</h2>
+        <p class="section-intro">La transparencia también consiste en decir cuándo un dato no está disponible.</p>
+      </div>
+      <div class="data-list">
+        <div class="data-row available"><span>Altura del Paraná</span><b>Automática / nacional</b></div>
+        <div class="data-row available"><span>Alerta y evacuación</span><b>Publicadas</b></div>
+        <div class="data-row available"><span>Pronóstico meteorológico</span><b>SMN</b></div>
+        <div class="data-row partial"><span>Mapa de riesgo barrial</span><b>Existe, no está abierto completo</b></div>
+        <div class="data-row missing"><span>Estado de bombas</span><b>No publicado en tiempo real</b></div>
+        <div class="data-row partial"><span>Centros de evacuación</span><b>Requiere confirmación vigente</b></div>
+      </div>
+    </section>
+
+    <section class="section neighborhoods">
+      <div class="section-heading"><div><p class="eyebrow">ZONAS RELEVADAS</p><h2>Barrios con exposición conocida</h2></div><span>Fuente: Informe de Gestión municipal 2024</span></div>
+      <div class="chips" id="chips"></div>
+      <p class="notice">Esta lista identifica sectores relevados; no significa que todo el barrio esté inundado. Seguí siempre las indicaciones de Defensa Civil.</p>
+    </section>
+
+    <section class="section sources">
+      <p class="eyebrow">FUENTES DIRECTAS</p><h2>Comprobalo vos mismo</h2>
+      <div class="source-grid">
+        <a href="https://alerta.ina.gob.ar/a5/diario/reporte_diario" target="_blank" rel="noreferrer"><small>INA</small><b>Reporte diario del Paraná</b><span>Fuente de altura, tendencia y umbrales →</span></a>
+        <a href="https://www.smn.gob.ar/" target="_blank" rel="noreferrer"><small>SMN</small><b>Alertas meteorológicas</b><span>Pronóstico y avisos oficiales →</span></a>
+        <a href="https://catalogogis.ciudaddecorrientes.gov.ar/idemcc/" target="_blank" rel="noreferrer"><small>IDEMCC</small><b>Mapa municipal</b><span>Pluviales e infraestructura publicada →</span></a>
+        <a href="https://gobiernoabierto.ciudaddecorrientes.gov.ar/" target="_blank" rel="noreferrer"><small>MUNICIPIO</small><b>Gobierno abierto</b><span>Datos y solicitudes de información →</span></a>
+      </div>
+    </section>
+
+    <section class="emergency">
+      <div><p class="eyebrow">ANTE UNA EMERGENCIA</p><h2>La aplicación informa. Las autoridades ordenan evacuar.</h2></div>
+      <div class="phones"><a href="tel:103"><b>103</b><span>Defensa Civil</span></a><a href="tel:106"><b>106</b><span>Prefectura</span></a><a href="tel:911"><b>911</b><span>Emergencias</span></a></div>
+    </section>
+  </main>
+
+  <footer><span>Paraná Alerta Corrientes · prototipo independiente</span><span id="checked">Revisado 22/10/2026</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
