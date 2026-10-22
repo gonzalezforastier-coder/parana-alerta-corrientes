@@ -1,8 +1,10 @@
-/* Alerta Paraná Corrientes
+/* Altura Paraná Corrientes
    Los datos salen de datos.json, que se actualiza solo con la lectura oficial (ver scripts/actualizar.py).
    Esta página no inventa valores: si la fuente no publica, lo dice. */
 
-const REPO_RAW = 'https://raw.githubusercontent.com/gonzalezforastier-coder/parana-alerta-corrientes/main/datos.json';
+// datos.json se lee desde el repositorio (siempre fresco) y, si falla, desde el mismo sitio.
+// Figuran los dos nombres posibles del repositorio por si se lo renombra.
+const REPOS_RAW = ['altura-parana-corrientes', 'parana-alerta-corrientes'].map(n => 'https://raw.githubusercontent.com/gonzalezforastier-coder/' + n + '/main/datos.json');
 const REFRESCO_MS = 5 * 60 * 1000;      // la página vuelve a pedir datos.json cada 5 minutos
 const LIMITE_FUENTE_DIAS = 2;           // lectura oficial con 2 o más días: se avisa
 const LIMITE_CONSULTA_HS = 3;           // si nadie consultó la fuente hace más de 3 horas: se avisa
@@ -24,7 +26,7 @@ async function pedir(url) {
 }
 async function cargarDatos() {
   const candidatos = [];
-  for (const u of [REPO_RAW, 'datos.json']) {
+  for (const u of [...REPOS_RAW, 'datos.json']) {
     try { candidatos.push(await pedir(u)); } catch (e) { console.warn('Datos:', e.message); }
   }
   if (!candidatos.length) return null;
