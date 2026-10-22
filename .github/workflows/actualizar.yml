@@ -2,7 +2,7 @@ name: Actualizar altura del río
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # cada 30 minutos (GitHub puede demorar algunos minutos)
+    - cron: "17 * * * *"      # cada hora, al minuto 17 (evita los picos de :00 y :30)
   workflow_dispatch: {}       # también se puede correr a mano desde la pestaña Actions
 
 permissions:
