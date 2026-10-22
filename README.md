@@ -7,4 +7,4 @@ Muestra la última altura oficial del río Paraná en Puerto Corrientes, un mapa
 - Si la fuente no publica o no se puede leer, la página lo avisa y conserva la última lectura válida. Nunca inventa valores.
 - Cero de la escala de Puerto Corrientes: 41,42 m sobre el nivel del mar (referencia IGN). Dato a confirmar con INA/IGN.
 
-Fuentes: INA (reporte diario), Prefectura Naval Argentina, historial de Copernicus Argentina (CC BY 4.0).
+Fuente: lecturas de Prefectura Naval Argentina (republicadas por rioparana.com.ar, Copernicus Argentina e INA); historial de Copernicus Argentina (CC BY 4.0).

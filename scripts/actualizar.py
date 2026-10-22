@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Lee la altura del río Paraná en Corrientes desde la fuente oficial y actualiza datos.json.
+"""Lee la altura del río Paraná en Corrientes (lecturas de Prefectura Naval Argentina) y actualiza datos.json.
 
 Reglas:
 - Solo guarda una lectura nueva si se pudo leer con certeza (altura + fecha + niveles de alerta
   y evacuación que coinciden con los del archivo). Si algo no cierra, NO inventa ni repite:
   deja la última lectura válida, marca estado "error" y la página lo muestra en un cartel.
-- Fuente principal: INA, reporte diario (lecturas de Prefectura Naval Argentina).
-- Fuente de respaldo (solo para confirmar, nunca para pisar con una fecha más vieja): Copernicus Argentina.
+- Consulta varias páginas que publican las lecturas de Prefectura y guarda la de fecha más reciente,
+  indicando siempre de cuál salió. Nunca reemplaza una lectura por otra de fecha anterior.
 """
 import html
 import json
@@ -19,14 +19,22 @@ from pathlib import Path
 ARCHIVO = Path(__file__).resolve().parent.parent / "datos.json"
 FUENTES = [
     {
+        "tipo": "rioparana",
+        "nombre": "Prefectura Naval Argentina (vía rioparana.com.ar)",
+        "url": "https://rioparana.com.ar/rio/corrientes",
+    },
+    {
+        "tipo": "copernicus",
+        "nombre": "Prefectura Naval Argentina (lecturas publicadas por el INA, vía Copernicus Argentina)",
+        "url": "https://copernicus.com.ar/rio/corrientes",
+    },
+    {
+        "tipo": "ina",
         "nombre": "INA, reporte diario (lecturas de Prefectura Naval Argentina)",
         "url": "https://alerta.ina.gob.ar/a5/diario/reporte_diario",
     },
-    {
-        "nombre": "Copernicus Argentina (lecturas de Prefectura Naval Argentina publicadas por el INA)",
-        "url": "https://copernicus.com.ar/rio/corrientes",
-    },
 ]
+MESES = {m: i + 1 for i, m in enumerate("enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split())}
 NUM = r"(\d{1,2}[.,]\d{1,2})"
 
 
@@ -83,28 +91,48 @@ def leer_copernicus(texto):
     return num(m.group(1)), fecha_iso(m.group(2), m.group(3), m.group(4)), None
 
 
+def leer_rioparana(texto):
+    """'Corrientes (17 de octubre de 2026) ... 6,66 m'"""
+    m = re.search(r"Corrientes\s*\(\s*(\d{1,2}) de ([a-záéíóú]+) de (20\d{2})\s*\)", texto, re.I)
+    if not m or m.group(2).lower() not in MESES:
+        raise ValueError("no se encontró 'Corrientes (fecha)'")
+    ventana = texto[m.end(): m.end() + 250]
+    h = re.search(r"(\d{1,2}[.,]\d{1,2})\s*m\b", ventana)
+    if not h:
+        raise ValueError("no se encontró la altura junto a la fecha")
+    return num(h.group(1)), fecha_iso(m.group(1), MESES[m.group(2).lower()], m.group(3)), None
+
+
 def main():
     d = json.loads(ARCHIVO.read_text(encoding="utf-8"))
     ahora = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     E = d["escala"]
     errores, hallazgo = [], None
 
-    for i, f in enumerate(FUENTES):
+    encontrados = []
+    for prioridad, f in enumerate(FUENTES):
         try:
             texto = a_texto(descargar(f["url"]))
-            if i == 0:
+            if f["tipo"] == "ina":
                 altura, fecha, variacion = leer(texto, E["alerta_m"], E["evacuacion_m"])
+            elif f["tipo"] == "rioparana":
+                altura, fecha, variacion = leer_rioparana(texto)
             else:
                 altura, fecha, variacion = leer_copernicus(texto)
             if not (0 <= altura <= 12):
                 raise ValueError(f"altura fuera de rango: {altura}")
             print(f"[ok] {f['nombre']}: {altura} m el {fecha}")
-            hallazgo = {"altura": altura, "fecha": fecha, "variacion": variacion, "fuente": f}
-            break
+            encontrados.append({"altura": altura, "fecha": fecha, "variacion": variacion, "fuente": f, "prioridad": prioridad})
         except Exception as e:  # noqa: BLE001
             msg = f"{f['url']}: {e}"
             print("[falla]", msg, file=sys.stderr)
             errores.append(msg)
+    if encontrados:
+        # la lectura de fecha más reciente; si empatan, la de la fuente que figura primero
+        hallazgo = sorted(encontrados, key=lambda h: (h["fecha"], -h["prioridad"]))[-1]
+        otras = [h for h in encontrados if h["fecha"] == hallazgo["fecha"] and abs(h["altura"] - hallazgo["altura"]) > 0.015]
+        if otras:
+            print("[aviso] fuentes con la misma fecha y alturas distintas:", [(h["fuente"]["tipo"], h["altura"]) for h in encontrados], file=sys.stderr)
 
     d["consultado"] = ahora
     if not hallazgo:
