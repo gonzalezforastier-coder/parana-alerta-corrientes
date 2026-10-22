@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "escala": {
+    "nombre": "Puerto Corrientes",
+    "cero_igin_m": 41.42,
+    "alerta_m": 6.5,
+    "evacuacion_m": 7.0,
+    "calibracion_m": 0
+  },
+  "lectura": {
+    "fecha": "2026-10-21",
+    "altura_m": 7.36,
+    "variacion_m": 0.09,
+    "fuente": "INA, reporte diario (lecturas de Prefectura Naval Argentina)",
+    "url": "https://alerta.ina.gob.ar/a5/diario/reporte_diario"
+  },
+  "consultado": "2026-10-22T18:40:00Z",
+  "estado": "ok",
+  "mensaje": "",
+  "historial": [
+    { "fecha": "2026-10-03", "altura_m": 4.02, "tipo": "publicado", "fuente": "Copernicus Argentina (Prefectura/INA)" },
+    { "fecha": "2026-10-14", "altura_m": 5.5, "tipo": "calculado", "fuente": "7,36 m menos el aumento de 1,86 m en 7 días informado por Copernicus Argentina" },
+    { "fecha": "2026-10-16", "altura_m": 6.13, "tipo": "publicado", "fuente": "Copernicus Argentina (Prefectura/INA)" },
+    { "fecha": "2026-10-17", "altura_m": 6.66, "tipo": "publicado", "fuente": "Prefectura Naval Argentina" },
+    { "fecha": "2026-10-20", "altura_m": 7.27, "tipo": "calculado", "fuente": "7,36 m menos la variación de 0,09 m informada para el 21/10" },
+    { "fecha": "2026-10-21", "altura_m": 7.36, "tipo": "publicado", "fuente": "INA, reporte diario" }
+  ]
+}
