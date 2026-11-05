@@ -8,13 +8,13 @@
     "calibracion_m": 0
   },
   "lectura": {
-    "fecha": "2026-11-04",
+    "fecha": "2026-11-05",
     "altura_m": 7.02,
-    "variacion_m": -0.04,
+    "variacion_m": 0.0,
     "fuente": "Prefectura Naval Argentina (lecturas publicadas por el INA, vía Copernicus Argentina)",
     "url": "https://copernicus.com.ar/rio/corrientes"
   },
-  "consultado": "2026-11-05T12:21:18Z",
+  "consultado": "2026-11-05T20:40:15Z",
   "estado": "ok",
   "mensaje": "",
   "historial": [
@@ -134,6 +134,12 @@
     },
     {
       "fecha": "2026-11-04",
+      "altura_m": 7.02,
+      "tipo": "publicado",
+      "fuente": "Prefectura Naval Argentina (lecturas publicadas por el INA, vía Copernicus Argentina)"
+    },
+    {
+      "fecha": "2026-11-05",
       "altura_m": 7.02,
       "tipo": "publicado",
       "fuente": "Prefectura Naval Argentina (lecturas publicadas por el INA, vía Copernicus Argentina)"
